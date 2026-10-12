@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+# secrets never go in git
+.env
+*.env
+secrets/
+*.key
+pi_cloud*
+# runtime state on the Pi
+camera.json
+# local scratch
+*.log
+*.bak-*
+pi-snapshot.md

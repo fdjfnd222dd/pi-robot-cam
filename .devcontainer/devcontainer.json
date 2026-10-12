@@ -1,0 +1,12 @@
+{
+  "name": "pi-robot-cam",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {}
+  },
+  "secrets": {
+    "TS_AUTHKEY": { "description": "Tailscale auth key (reusable + ephemeral). See docs/cloud.md" },
+    "PI_SSH_KEY_B64": { "description": "base64 -w0 ~/.ssh/pi_cloud (private key on one line). See docs/cloud.md" }
+  },
+  "postStartCommand": "bash cloud/setup.sh || echo 'cloud/setup.sh failed: see docs/cloud.md'"
+}

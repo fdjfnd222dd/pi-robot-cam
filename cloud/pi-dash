@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Call the Pi dashboard API from the cloud container (through the Tailscale SOCKS proxy).
+#   pi-dash /api/status                         GET, pretty JSON
+#   pi-dash /api/camera                         current camera settings
+#   pi-dash /api/camera '{"ev":0.5,"_log":true}'   POST a change
+# Drive commands (/api/drive) are deliberately not wrapped: driving from the
+# cloud needs a human watching the robot.
+set -euo pipefail
+PI_HOST="${PI_HOST:?set PI_HOST to the Pi Tailscale IP or MagicDNS name}"
+path="${1:?usage: pi-dash /api/... [json-body]}"
+case "$path" in /api/drive*) echo "refusing: drive the robot from the dashboard with eyes on it" >&2; exit 2;; esac
+if [ $# -ge 2 ]; then
+  curl -fsS --socks5-hostname localhost:1055 -H 'Content-Type: application/json' -d "$2" "http://$PI_HOST:8081$path"
+else
+  curl -fsS --socks5-hostname localhost:1055 "http://$PI_HOST:8081$path"
+fi | python3 -m json.tool
